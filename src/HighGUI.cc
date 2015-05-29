@@ -17,9 +17,10 @@ NamedWindow::Init(Handle<Object> target) {
 
     // Prototype
 	  NODE_SET_PROTOTYPE_METHOD(ctor, "show", Show);
-	  NODE_SET_PROTOTYPE_METHOD(ctor, "destroy", Destroy);
+    NODE_SET_PROTOTYPE_METHOD(ctor, "destroy", Destroy);
+    NODE_SET_PROTOTYPE_METHOD(ctor, "moveWindow", MoveWindow);
 	  NODE_SET_PROTOTYPE_METHOD(ctor, "blockingWaitKey", BlockingWaitKey);
-    
+
     target->Set(NanNew("NamedWindow"), ctor->GetFunction());
 };
 
@@ -87,4 +88,19 @@ NAN_METHOD(NamedWindow::BlockingWaitKey){
   int res = cv::waitKey(time);
 
 	NanReturnValue(NanNew<Number>(res));
+}
+
+
+NAN_METHOD(NamedWindow::MoveWindow){
+  SETUP_FUNCTION(NamedWindow)
+  int x = 0;
+  int y = 0;
+  if (args.This()->InternalFieldCount() == 2){
+    JSTHROW_TYPE("Cannot Instantiate without new")
+  }else{
+    x = args[0]->IntegerValue();
+    y = args[1]->IntegerValue();
+    cv::moveWindow(self->winname,x,y);
+  }
+  NanReturnValue(args.Holder());
 }
