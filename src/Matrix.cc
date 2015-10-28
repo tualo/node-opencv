@@ -103,6 +103,9 @@ void Matrix::Init(Local<Object> target) {
   Nan::SetPrototypeMethod(ctor, "shift", Shift);
   Nan::SetPrototypeMethod(ctor, "release", Release);
 
+
+  Nan::SetPrototypeMethod(ctor, "shearing", Shearing);
+
   target->Set(Nan::New("Matrix").ToLocalChecked(), ctor->GetFunction());
 };
 
@@ -2289,4 +2292,21 @@ NAN_METHOD(Matrix::Release) {
   self->mat.release();
 
   return;
+}
+
+
+NAN_METHOD(Matrix::Shearing){
+	Nan::HandleScope scope;
+
+  Matrix *self = ObjectWrap::Unwrap<Matrix>(info.This());
+  cv::Mat mat(2, 3, CV_32FC1);
+	mat.at<float>(0,0) = info[0]->NumberValue();
+	mat.at<float>(0,1) = info[1]->NumberValue();
+	mat.at<float>(0,2) = info[2]->NumberValue(); // x
+	mat.at<float>(1,0) = info[3]->NumberValue();
+	mat.at<float>(1,1) = info[4]->NumberValue();
+	mat.at<float>(1,2) = info[5]->NumberValue(); // y
+	cv::warpAffine(self->mat, self->mat, mat, self->mat.size());
+
+	return;
 }

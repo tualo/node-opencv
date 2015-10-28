@@ -118,6 +118,8 @@ public:
   JSFUNC(Shift)
 
   JSFUNC(Release)
+
+  JSFUNC(Shearing)
   /*
    static Handle<Value> Val(const Arguments& info);
    static Handle<Value> RowRange(const Arguments& info);
